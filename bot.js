@@ -6,6 +6,7 @@ const { spawn } = require('child_process');
 
 const config = require('./config');
 const db = require('./db');
+const isBlacklisted = require('./blacklist');
 // Add myself to get notified
 const swapnil = "317890515";
 
@@ -16,6 +17,7 @@ db.init();
 const stage = new Stage([courseraWizard])
 bot.use(session());
 bot.use(stage.middleware());
+bot.use(isBlacklisted);
 
 // utils
 async function isValidMail(email) {
