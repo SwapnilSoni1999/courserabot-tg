@@ -5,10 +5,12 @@ const session = require('telegraf/session');
 const { spawn } = require('child_process');
 
 const config = require('./config');
+const db = require('./db');
 // Add myself to get notified
 const swapnil = "317890515";
 
 const bot = new Telegraf(config.BOT_TOKEN);
+db.init();
 
 // Middlewares
 const stage = new Stage([courseraWizard])
@@ -61,6 +63,7 @@ const courseraWizard = new WizardScene(
                 } else if ('id' in returnData) {
                     ctx.replyWithMarkdown("Invitation Sent!\n```If you face any issue then please contact Swapnil Thanks.```\nAlso Checkout https://gamerary.com if you want to :3");
                 }
+                // Get notified that someone enrolled
                 ctx.tg.sendMessage(swapnil, returnData);
             });
 
@@ -75,6 +78,43 @@ const courseraWizard = new WizardScene(
 
 bot.command('invite', (ctx) => {
     ctx.scene.enter('coursera-invite');
+});
+
+bot.command('/ban', async (ctx) => {
+    if (ctx.chat.id == swapnil) {
+        const chatId = ctx.message.text.split(' ')[1]
+        const alreadyThere = await db.get(chatId)
+        if (alreadyThere) {
+            return ctx.reply('User is already banned!')
+        }
+
+        const added = await db.push(chatId)
+        if (added) {
+            ctx.reply('Banned ID:' + chatId)
+        } else {
+            ctx.reply('issues with banning')
+        }
+    } else {
+        ctx.reply('You iz not allowed to run this command kid :3');
+    }
+});
+bot.command('/unban', async (ctx) => {
+    if (ctx.chat.id == swapnil) {
+        const chatId = ctx.message.text.split(' ')[1]
+        const there = await db.get(chatId)
+        if (!there) {
+            return ctx.reply('User is not in ban list')
+        } 
+
+        const removed = await db.remove(chatId);
+        if (removed) {
+            ctx.reply('Unbanned:' + chatId)
+        } else {
+            ctx.reply('issues with unbanning')
+        }
+    } else {
+        ctx.reply('You iz not allowed to run this command kid :3');
+    }
 });
 
 bot.launch();
