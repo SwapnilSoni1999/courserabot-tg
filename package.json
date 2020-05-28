@@ -1,0 +1,14 @@
+{
+  "name": "courserabot-tg",
+  "version": "1.0.0",
+  "description": "bot to enroll students on coursera",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "telegraf": "^3.38.0"
+  }
+}
