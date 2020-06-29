@@ -14,7 +14,6 @@ const bot = new Telegraf(config.BOT_TOKEN);
 db.init();
 
 // Middlewares
-const stage = new Stage([courseraWizard])
 bot.use(session());
 bot.use(stage.middleware());
 bot.use(isBlacklisted);
@@ -77,6 +76,8 @@ const courseraWizard = new WizardScene(
         return ctx.scene.leave();
     },
 );
+
+const stage = new Stage([courseraWizard])
 
 bot.command('invite', (ctx) => {
     ctx.scene.enter('coursera-invite');
