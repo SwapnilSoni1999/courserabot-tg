@@ -14,6 +14,16 @@ const bot = new Telegraf(config.BOT_TOKEN);
 db.init();
 
 // Middlewares
+bot.use((ctx) => {
+    return ctx.reply([
+        'Hi! The bot has been shutdown. The coursera enrollment program is finished.',
+        'Thanks for supporting my projects.',
+        'If you wish to you can checkout my projects on my',
+        'git: https://github.com/SwapnilSoni1999',
+        'you can connect with me on facebook: https://fb.com/swapnilsoni1999'
+    ])
+})
+
 bot.use(session());
 bot.use(isBlacklisted);
 
@@ -24,7 +34,7 @@ async function isValidMail(email) {
 }
 
 const courseraWizard = new WizardScene(
-    'coursera-invite', 
+    'coursera-invite',
     async (ctx) => {
         await ctx.reply("Enter email id")
         return ctx.wizard.next();
@@ -41,7 +51,7 @@ const courseraWizard = new WizardScene(
     async (ctx) => {
         ctx.wizard.state.name = ctx.message.text;
         const { email, name } = ctx.wizard.state;
-    
+
         await ctx.reply(`Your email: ${email}\nYour Name: ${name}`);
         await ctx.tg.sendMessage(swapnil, `Email: ${email}\nName: ${name}\nUser chat: ${JSON.stringify(ctx.chat)}`)
         await ctx.reply('Sending Invitation please wait...');
@@ -49,9 +59,9 @@ const courseraWizard = new WizardScene(
             const process = spawn('python', [ './coursera.py', "--email", email, "--name", name ]);
             let dataToSend = '';
             process.stdout.on('data', (chunk) => {
-                dataToSend += Buffer.from(chunk).toString(); 
+                dataToSend += Buffer.from(chunk).toString();
             });
-            
+
             process.stdout.on('end', () => {
                 const returnData = JSON.parse(dataToSend);
                 console.log(returnData);
@@ -71,7 +81,7 @@ const courseraWizard = new WizardScene(
             ctx.reply("Something went wrong! Please contact Swapnil on Facebook.");
             console.log(error);
         }
-        
+
         return ctx.scene.leave();
     },
 );
@@ -107,7 +117,7 @@ bot.command('/unban', async (ctx) => {
         const there = await db.get(chatId)
         if (!there) {
             return ctx.reply('User is not in ban list')
-        } 
+        }
 
         const removed = await db.remove(chatId);
         if (removed) {
