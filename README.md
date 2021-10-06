@@ -43,5 +43,10 @@ eg. `/unban 134567`
 NOTE: Only pass chatId (Number) else it will throw exceptions.
 
 <hr>
+On 5/10/2021 The bot has been shutdown due to expiration of college subscription with coursera. The summary is attached in image of the bot engagement
+![image](https://user-images.githubusercontent.com/25403317/136155475-82e328cc-5906-412e-97bb-5f6755c1daf4.png)
+
+
+<hr>
 &copy; Swapnil Soni (SwapnilSoni1999)
 
